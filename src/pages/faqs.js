@@ -6,10 +6,9 @@ import {
   createFaq,
   updateFaq,
   removeFaq,
-} from './actions/faq';
+} from '../actions/faq';
 
-import QuestionInput from './questionInput';
-import QuestionCard from './questionCard';
+import { QuestionCard, QuestionInput } from '../components';
 
 function Faqs() {
   const dispatcher = useDispatch();
@@ -84,9 +83,25 @@ function Faqs() {
   }
 
   return (
-    <div className="Faqs" style={{ border: '4px solid #3a86ff', width: '90vw', height: 'calc(85vh - 10px)', overflowY: 'scroll', overscrollBehavior: 'contain' }}>
-      <header style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <h2 style={{ display: 'flex', flex: 1, margin: '1rem'}}>
+    <div
+      className="Faqs"
+      style={{
+        border: '4px solid #3a86ff',
+        width: '90vw',
+        height: 'calc(85vh - 10px)',
+        overflowY: 'scroll',
+        overscrollBehavior: 'contain'
+      }}
+    >
+      <header
+        style={{
+          width: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}
+      >
+        <h2 style={{ display: 'flex', flex: 1, margin: '1rem' }}>
           FAQs
         </h2>
 
@@ -97,16 +112,16 @@ function Faqs() {
         height: 'calc(100% - 312px)',
         minHeight: '300px',
         overflowY: 'scroll',
-        margin: 0,
+        margin: 0
       }}>
         {renderContent()}
       </ul>
 
       <footer style={{
         position: 'sticky',
-        '-webkit-box-shadow': '0px 0px 60px -30px rgba(0,0,0,0.75)',
-        '-moz-box-shadow': '0px 0px 60px -30px rgba(0,0,0,0.75)',
-        boxShadow: '0px 0px 60px -30px rgba(0,0,0,0.75)',
+        'webkitBoxShadow': '0px 0px 60px -30px rgba(0,0,0,0.75)',
+        'mozBoxShadow': '0px 0px 60px -30px rgba(0,0,0,0.75)',
+        boxShadow: '0px 0px 60px -30px rgba(0,0,0,0.75)'
       }}>
         <QuestionInput onSubmit={handleCreate} disabled={status !== 'READY'} />
       </footer>

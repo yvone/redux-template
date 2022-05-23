@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { getQuestions } from './actions/question';
+import { getQuestions } from '../actions/question';
 
-import QuestionInput from './questionInput';
-import QuestionCard from './questionCard';
+import { QuestionCard, QuestionInput } from '../components';
 
 function Questions() {
   const dispatcher = useDispatch();
@@ -99,7 +98,7 @@ function Questions() {
           })}
         </ul>
     
-        <QuestionInput onSubmit={handleCreate} />
+        <QuestionInput onSubmit={handleCreate} disabled={getQuestionsStatus !== 'READY'}/>
       </>
     )
   }

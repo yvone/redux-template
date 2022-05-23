@@ -1,7 +1,6 @@
 import React from 'react';
 
-import Faqs from './faqs';
-// import Questions from './questions';
+import { Faqs, Questions } from './pages';
 
 function App() {
   return (
