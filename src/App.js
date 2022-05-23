@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Faqs from './faqs';
-import Questions from './questions';
+// import Questions from './questions';
 
 function App() {
   return (
@@ -17,7 +17,7 @@ function App() {
         alignItems: 'center',
         gap: '1rem',
       }}>
-        <Questions />
+        {/* <Questions /> */}
         <Faqs />
       </div>
     </div>

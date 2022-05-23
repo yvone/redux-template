@@ -1,6 +1,8 @@
 import React from 'react';
 
 function QuestionInput(props) {
+    const { disabled } = props;
+
     const handleSubmit = (e) => {
         e.preventDefault();
         
@@ -15,6 +17,8 @@ function QuestionInput(props) {
         answer.value = '';
     }
 
+    const bgColor = disabled ? '#BDC3CB' : '#3a86ff';
+
     return (
         <form
             onSubmit={handleSubmit}
@@ -24,8 +28,8 @@ function QuestionInput(props) {
                 gridTemplateColumns: 'repeat(3, 1fr)',
                 gridAutoRows: 'minmax(3rem, auto)',
                 rowGap: '1rem',
-                border: '1px solid #3a86ff',
-                backgroundImage: 'repeating-linear-gradient(-45deg, #3a86ff, #3a86ff 0.25px, transparent 0, transparent 50%)',
+                border: `1px solid ${bgColor}`,
+                backgroundImage: `repeating-linear-gradient(-45deg, ${bgColor}, ${bgColor} 0.25px, transparent 0, transparent 50%)`,
                 backgroundSize: '12px 12px'
             }}
         >
@@ -42,6 +46,7 @@ function QuestionInput(props) {
                 <input
                     name="question"
                     className="writing"
+                    disabled={disabled}
                 />
             </div>
 
@@ -58,16 +63,19 @@ function QuestionInput(props) {
                 <input
                     name="answer"
                     className="writing"
+                    disabled={disabled}
                 />
             </div>
 
             <button
+                className={disabled ? "disabled" : ""}
                 type="submit"
                 style={{
                     gridColumn: '3 / span 1',
                     gridRowStart: '3',
                     width: '100%',
                 }}
+                disabled={disabled}
             >
                 Add
             </button>

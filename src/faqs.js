@@ -1,24 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { addFaq, updateFaq, removeFaq, removeAll } from './actions/faq';
+import {
+  getFaqs,
+  createFaq,
+  updateFaq,
+  removeFaq,
+} from './actions/faq';
 
 import QuestionInput from './questionInput';
 import QuestionCard from './questionCard';
 
 function Faqs() {
+  const dispatcher = useDispatch();
   const faqs = useSelector((state) => {
     return state.faqs.arr;
   })
-  const dispatcher = useDispatch();
-  const [localFaqs, setLocalFaqs] = useState(faqs);
+  const status = useSelector((state) => {
+    return state.faqs.status;
+  });
 
   useEffect(() => {
-    setLocalFaqs(faqs)
-  }, [faqs]);
+    dispatcher(getFaqs())
+  }, []);
 
   const handleCreate = (newFaq) => {
-    dispatcher(addFaq(newFaq));
+    dispatcher(createFaq(newFaq));
   }
 
   const handleUpdate = (updatedFaq) => {
@@ -29,24 +36,39 @@ function Faqs() {
     dispatcher(removeFaq(id));
   }
 
-  const handleRemoveAll = () => dispatcher(removeAll());
+  // const handleRemoveAll = () => dispatcher(removeAll());
 
-  return (
-    <div className="Faqs" style={{ border: '4px solid #8338ec', width: '90vw', padding: '1rem' }}>
-      <header style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <h2 style={{ display: 'flex', flex: 1}}>
-          FAQs with redux
-        </h2>
-
-        <div style={{ display: 'flex', flex: 3, alignItems: 'center', justifyContent: 'flex-end', gap: '1rem'  }}>
+  const renderActions = () => {
+    /*if (status === 'READY') {
+      return (
+        <div style={{ display: 'flex', flex: 3, alignItems: 'center', justifyContent: 'flex-end', gap: '1rem' }}>
           <button onClick={handleRemoveAll} className="danger">
             Remove all
           </button>
         </div>
-      </header>
+      )
+    }*/
+    return null;
+  }
 
-      <ul>
-        {localFaqs.map(faq => {
+  const renderContent = () => {
+    if (status === 'IDLE' || status === 'LOADING') {
+      return (
+        <p>Loading...</p>
+      )
+    };
+  
+    if (status === 'ERROR') {
+      return (
+        <p>
+          Something went wrong, try again later
+        </p>
+      )
+    };
+
+    return (
+      <>
+        {faqs.map(faq => {
           return (
             <li key={faq.id} style={{ listStyleType: 'decimal' }}>
               <QuestionCard
@@ -57,9 +79,37 @@ function Faqs() {
             </li>
           )
         })}
+      </>
+    )
+  }
+
+  return (
+    <div className="Faqs" style={{ border: '4px solid #3a86ff', width: '90vw', height: 'calc(85vh - 10px)', overflowY: 'scroll', overscrollBehavior: 'contain' }}>
+      <header style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <h2 style={{ display: 'flex', flex: 1, margin: '1rem'}}>
+          FAQs
+        </h2>
+
+        {renderActions()}
+      </header>
+
+      <ul style={{
+        height: 'calc(100% - 312px)',
+        minHeight: '300px',
+        overflowY: 'scroll',
+        margin: 0,
+      }}>
+        {renderContent()}
       </ul>
 
-      <QuestionInput onSubmit={handleCreate} />
+      <footer style={{
+        position: 'sticky',
+        '-webkit-box-shadow': '0px 0px 60px -30px rgba(0,0,0,0.75)',
+        '-moz-box-shadow': '0px 0px 60px -30px rgba(0,0,0,0.75)',
+        boxShadow: '0px 0px 60px -30px rgba(0,0,0,0.75)',
+      }}>
+        <QuestionInput onSubmit={handleCreate} disabled={status !== 'READY'} />
+      </footer>
     </div>
   );
 }

@@ -1,34 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { saveQuestions } from './actions/question';
+import { getQuestions } from './actions/question';
 
 import QuestionInput from './questionInput';
 import QuestionCard from './questionCard';
 
 function Questions() {
+  const dispatcher = useDispatch();
+
+  const getQuestionsStatus = useSelector((state) => {
+    return state.questions.getQuestionsState;
+  });
   const initialQuestions = useSelector((state) => {
     return state.questions.arr;
-  })
-  const dispatcher = useDispatch();
+  });
   const [questions, setQuestions] = useState(initialQuestions);
+
+  useEffect(() => {
+    dispatcher(getQuestions());
+  }, []);
 
   useEffect(() => {
     setQuestions(initialQuestions)
   }, [initialQuestions]);
 
-  const handleSave = () => {
-    dispatcher(saveQuestions(questions));
-  }
-
   const handleCreate = (question) => {
-    // Mock id - random number
-    const id = Math.floor(Math.random() * 1000);
-
     setQuestions([
       ...questions,
       {
-        id,
+        id: null,
         ...question,
       }
     ]);
@@ -53,6 +54,56 @@ function Questions() {
 
   const handleRemoveAll = () => setQuestions([]);
 
+  const renderActions = () => {
+    if (getQuestionsStatus === 'READY') {
+      return (
+        <div style={{ display: 'flex', flex: 3, alignItems: 'center', justifyContent: 'flex-end', gap: '0.5rem' }}>
+          <button onClick={handleRemoveAll} className="danger">
+            Remove all
+          </button>
+        </div>
+      )
+    } else {
+      return null;
+    }
+  }
+
+  const renderContent = () => {
+    if (getQuestionsStatus === 'IDLE' || getQuestionsStatus === 'LOADING') {
+      return (
+        <p>Loading...</p>
+      )
+    };
+  
+    if (getQuestionsStatus === 'ERROR') {
+      return (
+        <p>
+          Something went wrong, try again later
+        </p>
+      )
+    };
+
+    return (
+      <>
+        <ul>
+          {questions.map(question => {
+            return (
+              <li key={question.id} style={{ listStyleType: 'decimal' }}>
+                <QuestionCard
+                  initialValues={question}
+                  onUpdate={handleUpdate}
+                  onRemove={handleRemove}
+                />
+              </li>
+            )
+          })}
+        </ul>
+    
+        <QuestionInput onSubmit={handleCreate} />
+      </>
+    )
+  }
+
   return (
     <div className="Questions" style={{ border: '4px solid #8338ec', width: '90vw', padding: '1rem' }}>
       <header style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -60,31 +111,10 @@ function Questions() {
           Questions with thunks
         </h2>
 
-        <div style={{ display: 'flex', flex: 3, alignItems: 'center', justifyContent: 'flex-end', gap: '0.5rem' }}>
-          <button onClick={handleRemoveAll} className="danger">
-            Remove all
-          </button>
-          <button onClick={handleSave} className="magic">
-            Save local state
-          </button>
-        </div>
+        {renderActions()}
       </header>
 
-      <ul>
-        {questions.map(question => {
-          return (
-            <li key={question.id} style={{ listStyleType: 'decimal' }}>
-              <QuestionCard
-                initialValues={question}
-                onUpdate={handleUpdate}
-                onRemove={handleRemove}
-              />
-            </li>
-          )
-        })}
-      </ul>
-
-      <QuestionInput onSubmit={handleCreate} />
+      {renderContent()}
     </div>
   );
 }

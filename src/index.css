@@ -52,8 +52,19 @@ button.magic:hover {
   cursor: pointer;
 }
 
+button.disabled {
+  background-color: #BDC3CB;
+  color: black;
+}
+button.disabled:hover {
+  background-color: #BDC3CB;
+  color: black;
+  cursor: not-allowed;
+}
+
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Koulen', cursive;
+  margin: 0;
 }
 
 code {

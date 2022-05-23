@@ -87,18 +87,19 @@ function QuestionCard(props) {
                 }}
             >
                 <button
-                    className="danger"
+                    className={editable ? "disabled" : "danger"}
                     type="button"
                     onClick={handleRemove}
+                    disabled={editable}
                 >
                     Remove
                 </button>
                 <button
                     className="warning"
                     type="button"
-                    onClick={() => setEditable(true)}
+                    onClick={() => setEditable(!editable)}
                 >
-                    Edit
+                    {editable ? 'Cancel' : 'Edit'}
                 </button>
             </div>
         </form>
